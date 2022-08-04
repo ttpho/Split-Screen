@@ -21,7 +21,7 @@ class _SplitWidget extends State<SplitWidget> {
   Widget build(BuildContext context) =>
       OrientationBuilder(builder: (context, orientation) {
         return (orientation == Orientation.portrait)
-            ? SplitVerticalWidget(
+            ? SplitVerticalWidgetV2(
                 childTop: widget.childFirst,
                 childBottom: widget.childSecond,
               )
@@ -30,6 +30,81 @@ class _SplitWidget extends State<SplitWidget> {
                 childEnd: widget.childSecond,
               );
       });
+}
+
+class SplitVerticalWidgetV2 extends StatefulWidget {
+  final Widget? childTop;
+  final Widget? childBottom;
+
+  const SplitVerticalWidgetV2({
+    Key? key,
+    this.childTop,
+    this.childBottom,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SplitVerticalWidgetV2();
+}
+
+class _SplitVerticalWidgetV2 extends State<SplitVerticalWidgetV2> {
+  final ValueNotifier<double> _topDraggableIcon = ValueNotifier<double>(0.0);
+
+  @override
+  Widget build(BuildContext context) {
+    final double widthScreen = MediaQuery.of(context).size.width;
+    final double heightScreen = MediaQuery.of(context).size.height;
+    final padding = MediaQuery.of(context).padding;
+    final double heightWithoutStatusToolbar =
+        heightScreen - padding.top - kToolbarHeight;
+
+    if (_topDraggableIcon.value == 0.0) {
+      _topDraggableIcon.value =
+          (heightWithoutStatusToolbar - DraggableConfig.kTapSize) / 2;
+    }
+
+    return ValueListenableBuilder<double>(
+      valueListenable: _topDraggableIcon,
+      builder: (BuildContext context, double value, Widget? child) {
+        return Stack(
+          children: <Widget>[
+            Positioned(
+              child: widget.childTop!,
+              top: 0,
+              left: 0,
+              width: widthScreen,
+              height: value,
+            ),
+            Positioned(
+              child: widget.childBottom!,
+              top: value + DraggableConfig.kTapSize,
+              left: 0,
+              width: widthScreen,
+              height: heightWithoutStatusToolbar -
+                  (value + DraggableConfig.kTapSize),
+            ),
+            PositionedDraggableIcon(
+              left: 0,
+              top: value,
+              draggable: DraggableConfig(
+                backgroundColor: Colors.black12,
+                icon: Icons.more_horiz,
+                iconColor: Colors.white,
+              ),
+              feedback: DraggableConfig(
+                backgroundColor: Colors.black,
+                icon: Icons.more_horiz,
+                iconColor: Colors.white,
+              ),
+              axis: Axis.vertical,
+              onChangePosition: (top, left) {
+                _topDraggableIcon.value = top;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 class SplitVerticalWidget extends StatefulWidget {

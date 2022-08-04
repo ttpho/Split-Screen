@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'PositionedDraggableIcon.dart';
+import 'positioned_draggable_icon.dart';
 
 class SplitWidget extends StatefulWidget {
   SplitWidget({

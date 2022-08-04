@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'SplitWidget.dart';
+import 'split_widget.dart';
 
 void main() => runApp(MyApp());
 

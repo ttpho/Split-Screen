@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split/draggable_icon_config.dart';
 
 class PositionedDraggableIcon extends StatefulWidget {
   final double? top;
@@ -21,14 +22,9 @@ class PositionedDraggableIcon extends StatefulWidget {
   @override
   _PositionedDraggableIconState createState() =>
       _PositionedDraggableIconState();
-
-  static final double kTapSize = 20.0;
 }
 
 class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
-  static final double _kMinTop = 56.0;
-  static final double _kMinLeft = 56.0;
-
   final GlobalKey _key = GlobalKey();
   double? top, left;
   double xOff = 0;
@@ -43,7 +39,8 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
   }
 
   void _getRenderOffsets() {
-    final RenderBox renderBoxWidget = _key.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox renderBoxWidget =
+        _key.currentContext!.findRenderObject() as RenderBox;
     final offset = renderBoxWidget.localToGlobal(Offset.zero);
 
     yOff = offset.dy - this.top!;
@@ -72,18 +69,18 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
         child: Container(
           width: widget.axis == Axis.vertical
               ? widthScreen
-              : PositionedDraggableIcon.kTapSize,
+              : DraggableIconConfig.kTapSize,
           height: widget.axis == Axis.vertical
-              ? PositionedDraggableIcon.kTapSize
+              ? DraggableIconConfig.kTapSize
               : heightWithoutStatusToolbar,
           child: widget.childDraggable,
         ),
         feedback: Container(
           width: widget.axis == Axis.vertical
               ? widthScreen
-              : PositionedDraggableIcon.kTapSize,
+              : DraggableIconConfig.kTapSize,
           height: widget.axis == Axis.vertical
-              ? PositionedDraggableIcon.kTapSize
+              ? DraggableIconConfig.kTapSize
               : heightWithoutStatusToolbar,
           child: widget.childFeedback,
         ),
@@ -93,19 +90,20 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
             var _top = drag.offset.dy - yOff;
             var _left = drag.offset.dx - xOff;
             if (widget.axis == Axis.vertical) {
-              if (_top < _kMinTop) {
-                top = _kMinTop;
-              } else if (_top > (heightWithoutStatusToolbar - _kMinTop)) {
-                top = heightWithoutStatusToolbar - _kMinTop;
+              if (_top < DraggableIconConfig.kMinTop) {
+                top = DraggableIconConfig.kMinTop;
+              } else if (_top >
+                  (heightWithoutStatusToolbar - DraggableIconConfig.kMinTop)) {
+                top = heightWithoutStatusToolbar - DraggableIconConfig.kMinTop;
               } else {
                 top = _top;
               }
             } else {
               top = _top;
-              if (_left < _kMinLeft) {
-                left = _kMinLeft;
-              } else if (_left > (widthScreen - _kMinLeft)) {
-                left = widthScreen - _kMinLeft;
+              if (_left < DraggableIconConfig.kMinLeft) {
+                left = DraggableIconConfig.kMinLeft;
+              } else if (_left > (widthScreen - DraggableIconConfig.kMinLeft)) {
+                left = widthScreen - DraggableIconConfig.kMinLeft;
               } else {
                 left = _left;
               }

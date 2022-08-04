@@ -36,14 +36,42 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Container(
           child: SplitWidget(
-            childFirst: _webView("https://www.google.com/"),
-            childSecond: _webView("https://duckduckgo.com/"),
+            childFirst: const PageWidget(
+              color: Colors.orange,
+              text: "A",
+            ),
+            childSecond: const PageWidget(
+              color: Colors.redAccent,
+              text: "B",
+            ),
           ),
         ));
   }
+}
 
-  _webView(final String url) => WebView(
-        initialUrl: url,
-        javascriptMode: JavascriptMode.unrestricted,
-      );
+class PageWidget extends StatelessWidget {
+  final String text;
+  final Color color;
+
+  const PageWidget({
+    Key? key,
+    required this.text,
+    required this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 44,
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -35,9 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title!),
         ),
         body: Container(
-          child: SplitWidget(
-            childFirst: _webView("https://www.google.com/"),
-            childSecond: _webView("https://duckduckgo.com/"),
+          child: SplitHorizontalWidget(
+            childLeft: _webView("https://www.google.com/"),
+            childRight: _webView("https://duckduckgo.com/"),
           ),
         ));
   }

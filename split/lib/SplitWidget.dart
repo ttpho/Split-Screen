@@ -4,9 +4,9 @@ import 'PositionedDraggableIcon.dart';
 
 class SplitWidget extends StatefulWidget {
   SplitWidget({
-    Key key,
-    @required this.childFirst,
-    @required this.childSecond,
+    Key? key,
+    required this.childFirst,
+    required this.childSecond,
   }) : super(key: key);
   final Widget childFirst;
   final Widget childSecond;
@@ -32,10 +32,10 @@ class _SplitWidget extends State<SplitWidget> {
 }
 
 class SplitVerticalWidget extends StatefulWidget {
-  SplitVerticalWidget({Key key, this.childTop, this.childBottom})
+  SplitVerticalWidget({Key? key, this.childTop, this.childBottom})
       : super(key: key);
-  final Widget childTop;
-  final Widget childBottom;
+  final Widget? childTop;
+  final Widget? childBottom;
 
   @override
   _SplitVerticalWidget createState() => _SplitVerticalWidget();
@@ -59,14 +59,14 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
 
     return Stack(children: <Widget>[
       Positioned(
-        child: widget.childTop,
+        child: widget.childTop!,
         top: 0,
         left: 0,
         width: widthScreen,
         height: _topDraggableIcon,
       ),
       Positioned(
-        child: widget.childBottom,
+        child: widget.childBottom!,
         top: _topDraggableIcon + PositionedDraggableIcon.kTapSize,
         left: 0,
         width: widthScreen,
@@ -100,10 +100,10 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
 }
 
 class SplitHorizontalWidget extends StatefulWidget {
-  SplitHorizontalWidget({Key key, this.childLeft, this.childRight})
+  SplitHorizontalWidget({Key? key, this.childLeft, this.childRight})
       : super(key: key);
-  final Widget childLeft;
-  final Widget childRight;
+  final Widget? childLeft;
+  final Widget? childRight;
 
   @override
   _SplitHorizontalWidget createState() => _SplitHorizontalWidget();
@@ -126,14 +126,14 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
 
     return Stack(children: <Widget>[
       Positioned(
-        child: widget.childLeft,
+        child: widget.childLeft!,
         top: 0,
         left: 0,
         width: _leftDraggableIcon,
         height: heightWithoutStatusToolbar,
       ),
       Positioned(
-        child: widget.childRight,
+        child: widget.childRight!,
         top: 0,
         left: _leftDraggableIcon + PositionedDraggableIcon.kTapSize,
         width: widthScreen -

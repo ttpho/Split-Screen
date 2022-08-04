@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class PositionedDraggableIcon extends StatefulWidget {
-  final double top;
-  final double left;
-  final Function onChangePosition;
+  final double? top;
+  final double? left;
+  final Function? onChangePosition;
   final Axis axis;
-  final Widget childDraggable;
-  final Widget childFeedback;
+  final Widget? childDraggable;
+  final Widget? childFeedback;
 
   PositionedDraggableIcon(
-      {Key key,
+      {Key? key,
       this.axis: Axis.vertical,
       this.childDraggable,
       this.childFeedback,
@@ -30,8 +30,9 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
   static final double _kMinLeft = 56.0;
 
   final GlobalKey _key = GlobalKey();
-  double top, left;
-  double xOff, yOff;
+  double? top, left;
+  double xOff = 0;
+  double yOff = 0;
 
   @override
   void initState() {
@@ -42,11 +43,11 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
   }
 
   void _getRenderOffsets() {
-    final RenderBox renderBoxWidget = _key.currentContext.findRenderObject();
+    final RenderBox renderBoxWidget = _key.currentContext!.findRenderObject() as RenderBox;
     final offset = renderBoxWidget.localToGlobal(Offset.zero);
 
-    yOff = offset.dy - this.top;
-    xOff = offset.dx - this.left;
+    yOff = offset.dy - this.top!;
+    xOff = offset.dx - this.left!;
   }
 
   void _afterLayout(_) {
@@ -110,7 +111,7 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
               }
             }
             if (widget.onChangePosition != null) {
-              widget.onChangePosition(top, left);
+              widget.onChangePosition!(top, left);
             }
           });
         },

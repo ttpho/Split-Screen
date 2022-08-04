@@ -36,8 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Container(
           child: SplitHorizontalWidget(
-            childLeft: _webView("https://www.google.com/"),
-            childRight: _webView("https://duckduckgo.com/"),
+            childStart: _webView("https://www.google.com/"),
+            childEnd: _webView("https://duckduckgo.com/"),
           ),
         ));
   }

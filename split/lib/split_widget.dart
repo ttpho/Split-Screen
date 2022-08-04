@@ -25,8 +25,8 @@ class _SplitWidget extends State<SplitWidget> {
                 childBottom: widget.childSecond,
               )
             : SplitHorizontalWidget(
-                childLeft: widget.childFirst,
-                childRight: widget.childSecond,
+                childStart: widget.childFirst,
+                childEnd: widget.childSecond,
               );
       });
 }
@@ -85,7 +85,7 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
           });
         },
       ),
-    ]);
+    ],);
   }
 
   _childViewDragging(final Color color) => Container(
@@ -100,10 +100,13 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
 }
 
 class SplitHorizontalWidget extends StatefulWidget {
-  SplitHorizontalWidget({Key? key, this.childLeft, this.childRight})
-      : super(key: key);
-  final Widget? childLeft;
-  final Widget? childRight;
+  SplitHorizontalWidget({
+    Key? key,
+    required this.childStart,
+    required this.childEnd,
+  }) : super(key: key);
+  final Widget childStart;
+  final Widget childEnd;
 
   @override
   _SplitHorizontalWidget createState() => _SplitHorizontalWidget();
@@ -126,14 +129,14 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
 
     return Stack(children: <Widget>[
       Positioned(
-        child: widget.childLeft!,
+        child: widget.childStart,
         top: 0,
         left: 0,
         width: _leftDraggableIcon,
         height: heightWithoutStatusToolbar,
       ),
       Positioned(
-        child: widget.childRight!,
+        child: widget.childEnd,
         top: 0,
         left: _leftDraggableIcon + PositionedDraggableIcon.kTapSize,
         width: widthScreen -

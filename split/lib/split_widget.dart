@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:split/draggable_icon_config.dart';
+import 'package:split/draggable_config.dart';
 
 import 'positioned_draggable_icon.dart';
 
@@ -55,7 +55,7 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
 
     if (_topDraggableIcon == 0.0) {
       _topDraggableIcon =
-          (heightWithoutStatusToolbar - DraggableIconConfig.kTapSize) / 2;
+          (heightWithoutStatusToolbar - DraggableConfig.kTapSize) / 2;
     }
 
     return Stack(
@@ -69,21 +69,21 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
         ),
         Positioned(
           child: widget.childBottom!,
-          top: _topDraggableIcon + DraggableIconConfig.kTapSize,
+          top: _topDraggableIcon + DraggableConfig.kTapSize,
           left: 0,
           width: widthScreen,
           height: heightWithoutStatusToolbar -
-              (_topDraggableIcon + DraggableIconConfig.kTapSize),
+              (_topDraggableIcon + DraggableConfig.kTapSize),
         ),
         PositionedDraggableIcon(
           left: 0,
           top: _topDraggableIcon,
-          draggable: DraggableIconConfig(
+          draggable: DraggableConfig(
             backgroundColor: Colors.black12,
             icon: Icons.more_horiz,
             iconColor: Colors.white,
           ),
-          feedback: DraggableIconConfig(
+          feedback: DraggableConfig(
             backgroundColor: Colors.black,
             icon: Icons.more_horiz,
             iconColor: Colors.white,
@@ -125,7 +125,7 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
         heightScreen - padding.top - kToolbarHeight;
 
     if (_leftDraggableIcon == 0.0) {
-      _leftDraggableIcon = (widthScreen - DraggableIconConfig.kTapSize) / 2;
+      _leftDraggableIcon = (widthScreen - DraggableConfig.kTapSize) / 2;
     }
 
     return Stack(children: <Widget>[
@@ -139,20 +139,19 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
       Positioned(
         child: widget.childEnd,
         top: 0,
-        left: _leftDraggableIcon + DraggableIconConfig.kTapSize,
-        width:
-            widthScreen - (_leftDraggableIcon + DraggableIconConfig.kTapSize),
+        left: _leftDraggableIcon + DraggableConfig.kTapSize,
+        width: widthScreen - (_leftDraggableIcon + DraggableConfig.kTapSize),
         height: heightWithoutStatusToolbar,
       ),
       PositionedDraggableIcon(
         top: 0,
         left: _leftDraggableIcon,
-        draggable: DraggableIconConfig(
+        draggable: DraggableConfig(
           backgroundColor: Colors.black12,
           icon: Icons.more_vert,
           iconColor: Colors.white,
         ),
-        feedback: DraggableIconConfig(
+        feedback: DraggableConfig(
           backgroundColor: Colors.black,
           icon: Icons.more_vert,
           iconColor: Colors.white,
@@ -166,14 +165,4 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
       ),
     ]);
   }
-
-  _childViewDragging(final Color color) => Container(
-        color: color,
-        child: Center(
-          child: Icon(
-            Icons.more_vert,
-            color: Colors.white,
-          ),
-        ),
-      );
 }

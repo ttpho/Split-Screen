@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:split/draggable_icon_config.dart';
+import 'package:split/draggable_config.dart';
 
 class DraggableIcon extends StatelessWidget {
-  final DraggableIconConfig? config;
+  final DraggableConfig? config;
 
   const DraggableIcon({
     Key? key,
@@ -26,8 +26,8 @@ class PositionedDraggableIcon extends StatefulWidget {
   final double? left;
   final Function? onChangePosition;
   final Axis axis;
-  final DraggableIconConfig? draggable;
-  final DraggableIconConfig? feedback;
+  final DraggableConfig? draggable;
+  final DraggableConfig? feedback;
 
   PositionedDraggableIcon({
     Key? key,
@@ -87,18 +87,18 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
         child: Container(
           width: widget.axis == Axis.vertical
               ? widthScreen
-              : DraggableIconConfig.kTapSize,
+              : DraggableConfig.kTapSize,
           height: widget.axis == Axis.vertical
-              ? DraggableIconConfig.kTapSize
+              ? DraggableConfig.kTapSize
               : heightWithoutStatusToolbar,
           child: DraggableIcon(config: widget.draggable),
         ),
         feedback: Container(
           width: widget.axis == Axis.vertical
               ? widthScreen
-              : DraggableIconConfig.kTapSize,
+              : DraggableConfig.kTapSize,
           height: widget.axis == Axis.vertical
-              ? DraggableIconConfig.kTapSize
+              ? DraggableConfig.kTapSize
               : heightWithoutStatusToolbar,
           child: DraggableIcon(config: widget.feedback),
         ),
@@ -108,20 +108,20 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
             var _top = drag.offset.dy - yOff;
             var _left = drag.offset.dx - xOff;
             if (widget.axis == Axis.vertical) {
-              if (_top < DraggableIconConfig.kMinTop) {
-                top = DraggableIconConfig.kMinTop;
+              if (_top < DraggableConfig.kMinTop) {
+                top = DraggableConfig.kMinTop;
               } else if (_top >
-                  (heightWithoutStatusToolbar - DraggableIconConfig.kMinTop)) {
-                top = heightWithoutStatusToolbar - DraggableIconConfig.kMinTop;
+                  (heightWithoutStatusToolbar - DraggableConfig.kMinTop)) {
+                top = heightWithoutStatusToolbar - DraggableConfig.kMinTop;
               } else {
                 top = _top;
               }
             } else {
               top = _top;
-              if (_left < DraggableIconConfig.kMinLeft) {
-                left = DraggableIconConfig.kMinLeft;
-              } else if (_left > (widthScreen - DraggableIconConfig.kMinLeft)) {
-                left = widthScreen - DraggableIconConfig.kMinLeft;
+              if (_left < DraggableConfig.kMinLeft) {
+                left = DraggableConfig.kMinLeft;
+              } else if (_left > (widthScreen - DraggableConfig.kMinLeft)) {
+                left = widthScreen - DraggableConfig.kMinLeft;
               } else {
                 left = _left;
               }

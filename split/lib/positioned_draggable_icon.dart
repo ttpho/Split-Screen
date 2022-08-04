@@ -1,23 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:split/draggable_icon_config.dart';
 
+class DraggableIcon extends StatelessWidget {
+  final DraggableIconConfig? config;
+
+  const DraggableIcon({
+    Key? key,
+    required this.config,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Container(
+        color: config?.backgroundColor ?? Colors.black,
+        child: Center(
+          child: Icon(
+            config?.icon ?? Icons.more_horiz,
+            color: config?.iconColor ?? Colors.white,
+          ),
+        ),
+      );
+}
+
 class PositionedDraggableIcon extends StatefulWidget {
   final double? top;
   final double? left;
   final Function? onChangePosition;
   final Axis axis;
-  final Widget? childDraggable;
-  final Widget? childFeedback;
+  final DraggableIconConfig? draggable;
+  final DraggableIconConfig? feedback;
 
-  PositionedDraggableIcon(
-      {Key? key,
-      this.axis: Axis.vertical,
-      this.childDraggable,
-      this.childFeedback,
-      this.top,
-      this.left,
-      this.onChangePosition})
-      : super(key: key);
+  PositionedDraggableIcon({
+    Key? key,
+    this.axis: Axis.vertical,
+    this.top,
+    this.left,
+    this.onChangePosition,
+    this.draggable,
+    this.feedback,
+  }) : super(key: key);
 
   @override
   _PositionedDraggableIconState createState() =>
@@ -56,8 +76,6 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
     final double widthScreen = MediaQuery.of(context).size.width;
     final double heightScreen = MediaQuery.of(context).size.height;
     final padding = MediaQuery.of(context).padding;
-    // height without status and toolbar
-    // ignore: unused_local_variable
     final double heightWithoutStatusToolbar =
         heightScreen - padding.top - kToolbarHeight;
     return Positioned(
@@ -73,7 +91,7 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
           height: widget.axis == Axis.vertical
               ? DraggableIconConfig.kTapSize
               : heightWithoutStatusToolbar,
-          child: widget.childDraggable,
+          child: DraggableIcon(config: widget.draggable),
         ),
         feedback: Container(
           width: widget.axis == Axis.vertical
@@ -82,7 +100,7 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
           height: widget.axis == Axis.vertical
               ? DraggableIconConfig.kTapSize
               : heightWithoutStatusToolbar,
-          child: widget.childFeedback,
+          child: DraggableIcon(config: widget.feedback),
         ),
         childWhenDragging: Container(),
         onDragEnd: (drag) {

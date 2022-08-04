@@ -78,8 +78,16 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
         PositionedDraggableIcon(
           left: 0,
           top: _topDraggableIcon,
-          childDraggable: _childViewDragging(Colors.black12),
-          childFeedback: _childViewDragging(Colors.black),
+          draggable: DraggableIconConfig(
+            backgroundColor: Colors.black12,
+            icon: Icons.more_horiz,
+            iconColor: Colors.white,
+          ),
+          feedback: DraggableIconConfig(
+            backgroundColor: Colors.black,
+            icon: Icons.more_horiz,
+            iconColor: Colors.white,
+          ),
           axis: Axis.vertical,
           onChangePosition: (top, left) {
             setState(() {
@@ -90,16 +98,6 @@ class _SplitVerticalWidget extends State<SplitVerticalWidget> {
       ],
     );
   }
-
-  _childViewDragging(final Color color) => Container(
-        color: color,
-        child: Center(
-          child: Icon(
-            Icons.more_horiz,
-            color: Colors.white,
-          ),
-        ),
-      );
 }
 
 class SplitHorizontalWidget extends StatefulWidget {
@@ -149,8 +147,16 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
       PositionedDraggableIcon(
         top: 0,
         left: _leftDraggableIcon,
-        childDraggable: _childViewDragging(Colors.black12),
-        childFeedback: _childViewDragging(Colors.black),
+        draggable: DraggableIconConfig(
+          backgroundColor: Colors.black12,
+          icon: Icons.more_vert,
+          iconColor: Colors.white,
+        ),
+        feedback: DraggableIconConfig(
+          backgroundColor: Colors.black,
+          icon: Icons.more_vert,
+          iconColor: Colors.white,
+        ),
         axis: Axis.horizontal,
         onChangePosition: (top, left) {
           setState(() {

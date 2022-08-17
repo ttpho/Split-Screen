@@ -34,18 +34,24 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Container(
           child: SplitWidget(
-            childFirst: const PageWidget(
-              color: Colors.orange,
-              text: "A",
+            childFirst: SplitVerticalWidget(
+              childTop: const PageWidget(
+                color: Colors.red,
+                text: "A",
+              ),
+              childBottom: const PageWidget(
+                color: Colors.blue,
+                text: "B",
+              ),
             ),
             childSecond: SplitHorizontalWidget(
               childStart: const PageWidget(
-                color: Colors.redAccent,
-                text: "B",
+                color: Colors.yellow,
+                text: "C",
               ),
               childEnd: const PageWidget(
-                color: Colors.blue,
-                text: "C",
+                color: Colors.green,
+                text: "D",
               ),
             ),
           ),

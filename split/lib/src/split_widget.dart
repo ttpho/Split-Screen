@@ -17,16 +17,17 @@ class SplitWidget extends StatefulWidget {
 
 class _SplitWidget extends State<SplitWidget> {
   @override
-  Widget build(BuildContext context) =>
-      OrientationBuilder(builder: (context, orientation) {
-        return (orientation == Orientation.portrait)
-            ? SplitVerticalWidget(
-                childTop: widget.childFirst,
-                childBottom: widget.childSecond,
-              )
-            : SplitHorizontalWidget(
-                childStart: widget.childFirst,
-                childEnd: widget.childSecond,
-              );
-      });
+  Widget build(BuildContext context) => OrientationBuilder(
+        builder: (context, orientation) {
+          return (orientation == Orientation.portrait)
+              ? SplitVerticalWidget(
+                  childTop: widget.childFirst,
+                  childBottom: widget.childSecond,
+                )
+              : SplitHorizontalWidget(
+                  childStart: widget.childFirst,
+                  childEnd: widget.childSecond,
+                );
+        },
+      );
 }

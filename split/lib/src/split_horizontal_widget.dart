@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split/src/draggable_config.dart';
+import 'package:split/src/measure_size_render_object.dart';
 import 'package:split/src/positioned_draggable_icon.dart';
 
 class SplitHorizontalWidget extends StatefulWidget {
@@ -16,57 +17,58 @@ class SplitHorizontalWidget extends StatefulWidget {
 }
 
 class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
+  var childSize = Size.zero;
+
   double _leftDraggableIcon = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    final double widthScreen = MediaQuery.of(context).size.width;
-    final double heightScreen = MediaQuery.of(context).size.height;
-    final padding = MediaQuery.of(context).padding;
-    final double heightWithoutStatusToolbar =
-        heightScreen - padding.top - kToolbarHeight;
-
-    if (_leftDraggableIcon == 0.0) {
-      _leftDraggableIcon = (widthScreen - DraggableConfig.kTapSize) / 2;
-    }
-
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          child: widget.childStart,
-          top: 0,
-          left: 0,
-          width: _leftDraggableIcon,
-          height: heightWithoutStatusToolbar,
-        ),
-        Positioned(
-          child: widget.childEnd,
-          top: 0,
-          left: _leftDraggableIcon + DraggableConfig.kTapSize,
-          width: widthScreen - (_leftDraggableIcon + DraggableConfig.kTapSize),
-          height: heightWithoutStatusToolbar,
-        ),
-        PositionedDraggableIcon(
-          top: 0,
-          left: _leftDraggableIcon,
-          draggable: DraggableConfig(
-            backgroundColor: Colors.black12,
-            icon: Icons.more_vert,
-            iconColor: Colors.white,
+    return MeasureSize(
+      onChange: (Size size) {
+        setState(() {
+          childSize = size;
+          _leftDraggableIcon = (childSize.width - DraggableConfig.kTapSize) / 2;
+        });
+      },
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            child: widget.childStart,
+            top: 0,
+            left: 0,
+            width: _leftDraggableIcon,
+            height: childSize.height,
           ),
-          feedback: DraggableConfig(
-            backgroundColor: Colors.black,
-            icon: Icons.more_vert,
-            iconColor: Colors.white,
+          Positioned(
+            child: widget.childEnd,
+            top: 0,
+            left: _leftDraggableIcon + DraggableConfig.kTapSize,
+            width: childSize.width -
+                (_leftDraggableIcon + DraggableConfig.kTapSize),
+            height: childSize.height,
           ),
-          axis: Axis.horizontal,
-          onChangePosition: (top, left) {
-            setState(() {
-              _leftDraggableIcon = left;
-            });
-          },
-        ),
-      ],
+          PositionedDraggableIcon(
+            top: 0,
+            left: _leftDraggableIcon,
+            draggable: DraggableConfig(
+              backgroundColor: Colors.black12,
+              icon: Icons.more_vert,
+              iconColor: Colors.white,
+            ),
+            feedback: DraggableConfig(
+              backgroundColor: Colors.black,
+              icon: Icons.more_vert,
+              iconColor: Colors.white,
+            ),
+            axis: Axis.horizontal,
+            onChangePosition: (top, left) {
+              setState(() {
+                _leftDraggableIcon = left;
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'split_widget.dart';
+import 'package:split/split.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,9 +38,15 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.orange,
               text: "A",
             ),
-            childSecond: const PageWidget(
-              color: Colors.redAccent,
-              text: "B",
+            childSecond: SplitHorizontalWidget(
+              childStart: const PageWidget(
+                color: Colors.redAccent,
+                text: "B",
+              ),
+              childEnd: const PageWidget(
+                color: Colors.blue,
+                text: "C",
+              ),
             ),
           ),
         ));

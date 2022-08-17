@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:split/draggable_config.dart';
+import 'package:split/src/draggable_config.dart';
 
 class DraggableIcon extends StatelessWidget {
   final DraggableConfig? config;

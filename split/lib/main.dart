@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split/split.dart';
-import 'package:split/src/measure_size_render_object.dart';
-import 'package:split/src/postion_widget.dart';
+import 'dart:io' show Platform;
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -32,164 +33,107 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: Text(widget.title ?? ""),
       ),
-      body: Container(
-        margin: EdgeInsets.all(50.0),
-        child: SizedView(),
-        /*
-        SplitWidget(
-          childFirst: SplitVerticalWidget(
-            childTop: const PageWidget(
-              color: Colors.red,
-              text: "A",
-            ),
-            childBottom: const PageWidget(
-              color: Colors.blue,
-              text: "B",
-            ),
-          ),
-          childSecond: SplitHorizontalWidget(
-            childStart: const PageWidget(
-              color: Colors.yellow,
-              text: "C",
-            ),
-            childEnd: const PageWidget(
-              color: Colors.green,
-              text: "D",
-            ),
-          ),
-        ),
-        */
+      body: Builder(builder: (context) {
+        if (Platform.isAndroid || Platform.isIOS) {
+          return MobileDisplayWidget();
+        }
+        return WebScreenDisplayWidget();
+      }),
+
+      // WebScreenDisplayWidget(),
+    );
+  }
+}
+
+class MobileDisplayWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final configVertical = DragItemConfig(
+      backgroundColor: Colors.black12,
+      icon: Icons.drag_indicator,
+      iconColor: Colors.white,
+    );
+    return SplitWidget(
+      axis: Axis.vertical,
+      itemDefault: configVertical,
+      itemDragging: configVertical,
+      itemFeedback: configVertical,
+      firstChild: WebViewPageWidget(
+        url: "https://www.google.com/search?q=android",
+      ),
+      lastChild: WebViewPageWidget(
+        url: "https://github.com/search?q=android",
       ),
     );
   }
 }
 
-class SizedView extends StatelessWidget {
+class WebScreenDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Size size = Size.zero;
-    Offset dragOffset = Offset.zero;
+    final configVertical = DragItemConfig(
+      backgroundColor: Colors.black12,
+      icon: Icons.drag_indicator,
+      iconColor: Colors.white,
+    );
 
-    final axis = Axis.horizontal;
-
-    final PositionWidget postionWidget = PositionWidget();
-    return StatefulBuilder(builder: (context, setState) {
-      return Container(
-        height: 300,
-        width: 600,
-        child: MeasureSizeWidget(
-          onChange: (Size newSize) {
-            setState((() {
-              size = newSize;
-              postionWidget.update(
-                size,
-                dragOffset,
-                postionWidget.drag.size,
-                axis,
-              );
-            }));
-          },
-          child: Stack(
-            children: [
-              PageWidget(
-                color: Colors.red,
-                text:
-                    "${size.toString()} ${postionWidget.drag.position.toString()}",
-              ),
-              Positioned(
-                left: postionWidget.drag.position.dx,
-                top: postionWidget.drag.position.dy,
-                child: DragWidget(
-                  axis: axis,
-                  dragSize: postionWidget.drag.size,
-                  onDragEnd: (offset) {
-                    if (offset != null) {
-                      setState(
-                        () {
-                          final currentOffset =
-                              postionWidget.drag.position + offset;
-                          postionWidget.update(
-                            size,
-                            currentOffset,
-                            postionWidget.drag.size,
-                            axis,
-                          );
-                        },
-                      );
-                    }
-                  },
-                ),
-              ),
-              Positioned(
-                left: postionWidget.getFirst(axis).position.dx,
-                top: postionWidget.getFirst(axis).position.dy,
-                width: postionWidget.getFirst(axis).size.width,
-                height: postionWidget.getFirst(axis).size.height,
-                child: PageWidget(
-                  text: "FIRST",
-                  color: Colors.green,
-                ),
-              ),
-              Positioned(
-                left: postionWidget.getLast(axis).position.dx,
-                top: postionWidget.getLast(axis).position.dy,
-                width: postionWidget.getLast(axis).size.width,
-                height: postionWidget.getLast(axis).size.height,
-                child: PageWidget(
-                  text: "LAST",
-                  color: Colors.yellow,
-                ),
-              ),
-            ],
-          ),
+    final configHorizontal = DragItemConfig(
+      backgroundColor: Colors.black12,
+      icon: Icons.drag_indicator,
+      iconColor: Colors.white,
+    );
+    return SplitWidget(
+      axis: Axis.horizontal,
+      itemDefault: configHorizontal,
+      itemDragging: configHorizontal,
+      itemFeedback: configHorizontal,
+      firstChild: PageWidget(
+        color: Colors.red,
+        text: "A",
+      ),
+      lastChild: SplitWidget(
+        axis: Axis.vertical,
+        itemDefault: configVertical,
+        itemDragging: configVertical,
+        itemFeedback: configVertical,
+        firstChild: PageWidget(
+          color: Colors.green,
+          text: "B",
         ),
-      );
-    });
+        lastChild: PageWidget(
+          color: Colors.orange,
+          text: "C",
+        ),
+      ),
+    );
   }
 }
 
-class DragWidget extends StatelessWidget {
-  final void Function(
-    Offset? offset,
-  ) onDragEnd;
+class WebViewPageWidget extends StatefulWidget {
+  final String url;
 
-  final Size dragSize;
-  final Axis axis;
-
-  const DragWidget({
+  const WebViewPageWidget({
     Key? key,
-    required this.onDragEnd,
-    required this.dragSize,
-    required this.axis,
+    required this.url,
   }) : super(key: key);
 
   @override
+  _WebViewPageWidgetState createState() => _WebViewPageWidgetState();
+}
+
+class _WebViewPageWidgetState extends State<WebViewPageWidget> {
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    double width = dragSize.width;
-    double height = dragSize.height;
-    return Draggable(
-      child: Container(
-        height: height,
-        width: width,
-        color: Colors.black,
-      ),
-      childWhenDragging: Container(
-        height: height,
-        width: width,
-        color: Colors.grey,
-      ),
-      feedback: Container(
-        height: height,
-        width: width,
-        color: Colors.blue,
-      ),
-      onDragEnd: (drag) {
-        final renderBox = context.findRenderObject() as RenderBox?;
-        var offset = renderBox?.globalToLocal(drag.offset) ?? Offset.zero;
-        onDragEnd(offset);
-      },
+    return WebView(
+      initialUrl: widget.url,
     );
   }
 }
@@ -213,7 +157,7 @@ class PageWidget extends StatelessWidget {
           text,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 12,
+            fontSize: 24,
           ),
         ),
       ),

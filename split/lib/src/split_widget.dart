@@ -26,8 +26,17 @@ class SplitWidget extends StatefulWidget {
 
 class _SplitWidgetState extends State<SplitWidget> {
   Size parentSize = Size.zero;
-  Offset dragOffset = Offset.zero;
   final PositionWidget postionWidget = PositionWidget();
+  final DragWidgetConfig dragWidgetConfigDefault = DragWidgetConfig();
+
+  void _updateNewState(final Offset dragOffset) {
+    postionWidget.update(
+      parentSize,
+      dragOffset,
+      postionWidget.drag.size,
+      widget.axis,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +45,7 @@ class _SplitWidgetState extends State<SplitWidget> {
       onChange: (Size newSize) {
         setState(() {
           parentSize = newSize;
-          postionWidget.update(
-            parentSize,
-            dragOffset,
-            postionWidget.drag.size,
-            axis,
-          );
+          _updateNewState(Offset.zero);
         });
       },
       child: Stack(
@@ -63,18 +67,10 @@ class _SplitWidgetState extends State<SplitWidget> {
               ),
               onDragEnd: (offset) {
                 if (offset != null) {
-                  setState(
-                    () {
-                      final currentOffset =
-                          postionWidget.drag.position + offset;
-                      postionWidget.update(
-                        parentSize,
-                        currentOffset,
-                        postionWidget.drag.size,
-                        axis,
-                      );
-                    },
-                  );
+                  setState(() {
+                    final currentOffset = postionWidget.drag.position + offset;
+                    _updateNewState(currentOffset);
+                  });
                 }
               },
             ),
@@ -91,12 +87,30 @@ class _SplitWidgetState extends State<SplitWidget> {
             top: postionWidget.getLast(axis).position.dy,
             width: postionWidget.getLast(axis).size.width,
             height: postionWidget.getLast(axis).size.height,
-            child: widget.firstChild,
+            child: widget.lastChild,
           ),
         ],
       ),
     );
   }
+}
+
+class DragWidgetConfig {
+  final double widthDrag;
+  final double heightDrag;
+  final double minTopDrag;
+  final double minLeftDrag;
+  final double minTopVisibleDrag;
+  final double minLeftVisibleDrag;
+
+  DragWidgetConfig({
+    this.widthDrag = 56.0,
+    this.heightDrag = 56.0,
+    this.minTopDrag = 56.0,
+    this.minLeftDrag = 56.0,
+    this.minTopVisibleDrag = 280.0,
+    this.minLeftVisibleDrag = 280.0,
+  });
 }
 
 class DragItemConfig {
@@ -121,12 +135,12 @@ class DraggableIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => config == null
-      ? SizedBox()
+      ? Container()
       : Container(
           color: config?.backgroundColor ?? Colors.transparent,
           child: Center(
             child: Icon(
-              config?.icon ?? Icons.more_horiz,
+              config?.icon ?? Icons.drag_handle,
               color: config?.iconColor ?? Colors.transparent,
             ),
           ),

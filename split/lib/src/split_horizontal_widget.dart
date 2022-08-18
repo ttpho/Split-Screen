@@ -48,6 +48,7 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
             height: childSize.height,
           ),
           PositionedDraggableIcon(
+            size: childSize,
             top: 0,
             left: _leftDraggableIcon,
             draggable: DraggableConfig(

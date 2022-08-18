@@ -28,6 +28,7 @@ class PositionedDraggableIcon extends StatefulWidget {
   final Axis axis;
   final DraggableConfig? draggable;
   final DraggableConfig? feedback;
+  final Size size;
 
   PositionedDraggableIcon({
     Key? key,
@@ -37,6 +38,7 @@ class PositionedDraggableIcon extends StatefulWidget {
     this.onChangePosition,
     this.draggable,
     this.feedback,
+    required this.size,
   }) : super(key: key);
 
   @override
@@ -73,11 +75,7 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
 
   @override
   Widget build(BuildContext context) {
-    final double widthScreen = MediaQuery.of(context).size.width;
-    final double heightScreen = MediaQuery.of(context).size.height;
-    final padding = MediaQuery.of(context).padding;
-    final double heightWithoutStatusToolbar =
-        heightScreen - padding.top - kToolbarHeight;
+    final size = widget.size;
     return Positioned(
       key: _key,
       top: top,
@@ -86,20 +84,20 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
         axis: widget.axis,
         child: Container(
           width: widget.axis == Axis.vertical
-              ? widthScreen
+              ? size.width
               : DraggableConfig.kTapSize,
           height: widget.axis == Axis.vertical
               ? DraggableConfig.kTapSize
-              : heightWithoutStatusToolbar,
+              : size.height,
           child: DraggableIcon(config: widget.draggable),
         ),
         feedback: Container(
           width: widget.axis == Axis.vertical
-              ? widthScreen
+              ? size.width
               : DraggableConfig.kTapSize,
           height: widget.axis == Axis.vertical
               ? DraggableConfig.kTapSize
-              : heightWithoutStatusToolbar,
+              : size.height,
           child: DraggableIcon(config: widget.feedback),
         ),
         childWhenDragging: Container(),
@@ -110,9 +108,8 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
             if (widget.axis == Axis.vertical) {
               if (_top < DraggableConfig.kMinTop) {
                 top = DraggableConfig.kMinTop;
-              } else if (_top >
-                  (heightWithoutStatusToolbar - DraggableConfig.kMinTop)) {
-                top = heightWithoutStatusToolbar - DraggableConfig.kMinTop;
+              } else if (_top > (size.height - DraggableConfig.kMinTop)) {
+                top = size.height - DraggableConfig.kMinTop;
               } else {
                 top = _top;
               }
@@ -120,8 +117,8 @@ class _PositionedDraggableIconState extends State<PositionedDraggableIcon> {
               top = _top;
               if (_left < DraggableConfig.kMinLeft) {
                 left = DraggableConfig.kMinLeft;
-              } else if (_left > (widthScreen - DraggableConfig.kMinLeft)) {
-                left = widthScreen - DraggableConfig.kMinLeft;
+              } else if (_left > (size.width - DraggableConfig.kMinLeft)) {
+                left = size.width - DraggableConfig.kMinLeft;
               } else {
                 left = _left;
               }

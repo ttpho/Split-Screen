@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:split/src/split_horizontal_widget.dart';
-import 'package:split/src/split_vertical_widget.dart';
+import 'package:split/src/measure_size_render_object.dart';
+import 'package:split/src/postion_widget.dart';
 
 class SplitWidget extends StatefulWidget {
   final Widget firstChild;
   final Widget lastChild;
   final Axis axis;
+  final DragItemConfig? itemDefault;
+  final DragItemConfig? itemDragging;
+  final DragItemConfig? itemFeedback;
 
   const SplitWidget({
     Key? key,
     required this.firstChild,
     required this.lastChild,
     required this.axis,
+    this.itemDefault,
+    this.itemDragging,
+    this.itemFeedback,
   }) : super(key: key);
 
   @override
@@ -19,41 +25,161 @@ class SplitWidget extends StatefulWidget {
 }
 
 class _SplitWidgetState extends State<SplitWidget> {
+  Size parentSize = Size.zero;
+  Offset dragOffset = Offset.zero;
+  final PositionWidget postionWidget = PositionWidget();
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    final axis = widget.axis;
+    return MeasureSizeWidget(
+      onChange: (Size newSize) {
+        setState(() {
+          parentSize = newSize;
+          postionWidget.update(
+            parentSize,
+            dragOffset,
+            postionWidget.drag.size,
+            axis,
+          );
+        });
+      },
+      child: Stack(
+        children: [
+          Positioned(
+            left: postionWidget.drag.position.dx,
+            top: postionWidget.drag.position.dy,
+            child: DragWidget(
+              axis: axis,
+              dragSize: postionWidget.drag.size,
+              child: DraggableIconWidget(
+                config: widget.itemDefault,
+              ),
+              childWhenDragging: DraggableIconWidget(
+                config: widget.itemDragging,
+              ),
+              feedback: DraggableIconWidget(
+                config: widget.itemFeedback,
+              ),
+              onDragEnd: (offset) {
+                if (offset != null) {
+                  setState(
+                    () {
+                      final currentOffset =
+                          postionWidget.drag.position + offset;
+                      postionWidget.update(
+                        parentSize,
+                        currentOffset,
+                        postionWidget.drag.size,
+                        axis,
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+          Positioned(
+            left: postionWidget.getFirst(axis).position.dx,
+            top: postionWidget.getFirst(axis).position.dy,
+            width: postionWidget.getFirst(axis).size.width,
+            height: postionWidget.getFirst(axis).size.height,
+            child: widget.firstChild,
+          ),
+          Positioned(
+            left: postionWidget.getLast(axis).position.dx,
+            top: postionWidget.getLast(axis).position.dy,
+            width: postionWidget.getLast(axis).size.width,
+            height: postionWidget.getLast(axis).size.height,
+            child: widget.firstChild,
+          ),
+        ],
+      ),
+    );
   }
 }
-/*
 
-class SplitWidget extends StatefulWidget {
-  SplitWidget({
+class DragItemConfig {
+  final Color backgroundColor;
+  final Color iconColor;
+  final IconData icon;
+
+  DragItemConfig({
+    required this.backgroundColor,
+    required this.iconColor,
+    required this.icon,
+  });
+}
+
+class DraggableIconWidget extends StatelessWidget {
+  final DragItemConfig? config;
+
+  const DraggableIconWidget({
     Key? key,
-    required this.childFirst,
-    required this.childSecond,
+    required this.config,
   }) : super(key: key);
-  final Widget childFirst;
-  final Widget childSecond;
 
   @override
-  _SplitWidget createState() => _SplitWidget();
+  Widget build(BuildContext context) => config == null
+      ? SizedBox()
+      : Container(
+          color: config?.backgroundColor ?? Colors.transparent,
+          child: Center(
+            child: Icon(
+              config?.icon ?? Icons.more_horiz,
+              color: config?.iconColor ?? Colors.transparent,
+            ),
+          ),
+        );
 }
 
-class _SplitWidget extends State<SplitWidget> {
+class DragWidget extends StatelessWidget {
+  final void Function(
+    Offset? offset,
+  ) onDragEnd;
+
+  final Size dragSize;
+  final Axis axis;
+
+  final Widget? child;
+  final Widget? feedback;
+  final Widget? childWhenDragging;
+
+  const DragWidget({
+    Key? key,
+    required this.onDragEnd,
+    required this.dragSize,
+    required this.axis,
+    this.child,
+    this.feedback,
+    this.childWhenDragging,
+  }) : super(key: key);
+
   @override
-  Widget build(BuildContext context) => OrientationBuilder(
-        builder: (context, orientation) {
-          return (orientation == Orientation.portrait)
-              ? SplitVerticalWidget(
-                  childTop: widget.childFirst,
-                  childBottom: widget.childSecond,
-                )
-              : SplitHorizontalWidget(
-                  childStart: widget.childFirst,
-                  childEnd: widget.childSecond,
-                );
-        },
-      );
+  Widget build(BuildContext context) {
+    double width = dragSize.width;
+    double height = dragSize.height;
+    return Draggable(
+      child: Container(
+        height: height,
+        width: width,
+        child: child,
+      ),
+      childWhenDragging: Container(
+        height: height,
+        width: width,
+        child: childWhenDragging,
+      ),
+      feedback: Container(
+        height: height,
+        width: width,
+        child: feedback,
+      ),
+      onDragEnd: (drag) {
+        final renderBox = context.findRenderObject() as RenderBox?;
+        var offset = renderBox?.globalToLocal(drag.offset) ?? Offset.zero;
+        onDragEnd(offset);
+      },
+    );
+  }
 }
-*/

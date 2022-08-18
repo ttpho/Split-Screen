@@ -23,10 +23,10 @@ class MeasureSizeRenderObject extends RenderProxyBox {
   }
 }
 
-class MeasureSize extends SingleChildRenderObjectWidget {
+class MeasureSizeWidget extends SingleChildRenderObjectWidget {
   final OnWidgetSizeChange onChange;
 
-  const MeasureSize({
+  const MeasureSizeWidget({
     Key? key,
     required this.onChange,
     required Widget child,

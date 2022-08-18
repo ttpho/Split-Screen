@@ -23,7 +23,7 @@ class _SplitHorizontalWidget extends State<SplitHorizontalWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MeasureSize(
+    return MeasureSizeWidget(
       onChange: (Size size) {
         setState(() {
           childSize = size;

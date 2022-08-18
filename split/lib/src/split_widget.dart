@@ -3,6 +3,31 @@ import 'package:split/src/split_horizontal_widget.dart';
 import 'package:split/src/split_vertical_widget.dart';
 
 class SplitWidget extends StatefulWidget {
+  final Widget firstChild;
+  final Widget lastChild;
+  final Axis axis;
+
+  const SplitWidget({
+    Key? key,
+    required this.firstChild,
+    required this.lastChild,
+    required this.axis,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SplitWidgetState();
+}
+
+class _SplitWidgetState extends State<SplitWidget> {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+/*
+
+class SplitWidget extends StatefulWidget {
   SplitWidget({
     Key? key,
     required this.childFirst,
@@ -31,3 +56,4 @@ class _SplitWidget extends State<SplitWidget> {
         },
       );
 }
+*/

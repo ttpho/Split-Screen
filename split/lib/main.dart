@@ -79,7 +79,7 @@ class SizedView extends StatelessWidget {
       return Container(
         height: 300,
         width: 600,
-        child: MeasureSize(
+        child: MeasureSizeWidget(
           onChange: (Size newSize) {
             setState((() {
               size = newSize;

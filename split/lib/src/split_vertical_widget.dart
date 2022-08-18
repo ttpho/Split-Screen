@@ -23,7 +23,7 @@ class _SplitVerticalWidgetState extends State<SplitVerticalWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MeasureSize(
+    return MeasureSizeWidget(
       onChange: (Size size) {
         setState(() {
           childSize = size;

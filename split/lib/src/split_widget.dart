@@ -9,6 +9,7 @@ class SplitWidget extends StatefulWidget {
   final DragItemConfig? itemDefault;
   final DragItemConfig? itemDragging;
   final DragItemConfig? itemFeedback;
+  final DragWidgetConfig? dragWidgetConfig;
 
   const SplitWidget({
     Key? key,
@@ -18,6 +19,7 @@ class SplitWidget extends StatefulWidget {
     this.itemDefault,
     this.itemDragging,
     this.itemFeedback,
+    this.dragWidgetConfig,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,6 @@ class SplitWidget extends StatefulWidget {
 class _SplitWidgetState extends State<SplitWidget> {
   Size parentSize = Size.zero;
   final PositionWidget postionWidget = PositionWidget();
-  final DragWidgetConfig dragWidgetConfigDefault = DragWidgetConfig();
 
   void _updateNewState(final Offset dragOffset) {
     postionWidget.update(
@@ -40,7 +41,6 @@ class _SplitWidgetState extends State<SplitWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final axis = widget.axis;
     return MeasureSizeWidget(
       onChange: (Size newSize) {
         setState(() {
@@ -54,7 +54,7 @@ class _SplitWidgetState extends State<SplitWidget> {
             left: postionWidget.drag.position.dx,
             top: postionWidget.drag.position.dy,
             child: DragWidget(
-              axis: axis,
+              axis: widget.axis,
               dragSize: postionWidget.drag.size,
               child: DraggableIconWidget(
                 config: widget.itemDefault,
@@ -76,17 +76,17 @@ class _SplitWidgetState extends State<SplitWidget> {
             ),
           ),
           Positioned(
-            left: postionWidget.getFirst(axis).position.dx,
-            top: postionWidget.getFirst(axis).position.dy,
-            width: postionWidget.getFirst(axis).size.width,
-            height: postionWidget.getFirst(axis).size.height,
+            left: postionWidget.getFirst(widget.axis).position.dx,
+            top: postionWidget.getFirst(widget.axis).position.dy,
+            width: postionWidget.getFirst(widget.axis).size.width,
+            height: postionWidget.getFirst(widget.axis).size.height,
             child: widget.firstChild,
           ),
           Positioned(
-            left: postionWidget.getLast(axis).position.dx,
-            top: postionWidget.getLast(axis).position.dy,
-            width: postionWidget.getLast(axis).size.width,
-            height: postionWidget.getLast(axis).size.height,
+            left: postionWidget.getLast(widget.axis).position.dx,
+            top: postionWidget.getLast(widget.axis).position.dy,
+            width: postionWidget.getLast(widget.axis).size.width,
+            height: postionWidget.getLast(widget.axis).size.height,
             child: widget.lastChild,
           ),
         ],
@@ -103,7 +103,7 @@ class DragWidgetConfig {
   final double minTopVisibleDrag;
   final double minLeftVisibleDrag;
 
-  DragWidgetConfig({
+  const DragWidgetConfig({
     this.widthDrag = 56.0,
     this.heightDrag = 56.0,
     this.minTopDrag = 56.0,

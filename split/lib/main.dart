@@ -1,5 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:split/split.dart';
+import 'package:split/src/split_widget.dart';
 import 'dart:io' show Platform;
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -36,6 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title ?? ""),
       ),
       body: Builder(builder: (context) {
+        if (kIsWeb) {
+          return WebScreenDisplayWidget();
+        }
         if (Platform.isAndroid || Platform.isIOS) {
           return MobileDisplayWidget();
         }
@@ -50,16 +54,10 @@ class _MyHomePageState extends State<MyHomePage> {
 class MobileDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final configVertical = DragItemConfig(
-      backgroundColor: Colors.black12,
-      icon: Icons.drag_indicator,
-      iconColor: Colors.white,
-    );
     return SplitWidget(
-      axis: Axis.vertical,
-      itemDefault: configVertical,
-      itemDragging: configVertical,
-      itemFeedback: configVertical,
+      controller: SplitWidgetController(
+        Axis.vertical,
+      ),
       firstChild: WebViewPageWidget(
         url: "https://www.google.com/search?q=android",
       ),
@@ -73,31 +71,18 @@ class MobileDisplayWidget extends StatelessWidget {
 class WebScreenDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final configVertical = DragItemConfig(
-      backgroundColor: Colors.black12,
-      icon: Icons.drag_indicator,
-      iconColor: Colors.white,
-    );
-
-    final configHorizontal = DragItemConfig(
-      backgroundColor: Colors.black12,
-      icon: Icons.drag_indicator,
-      iconColor: Colors.white,
-    );
     return SplitWidget(
-      axis: Axis.horizontal,
-      itemDefault: configHorizontal,
-      itemDragging: configHorizontal,
-      itemFeedback: configHorizontal,
+      controller: SplitWidgetController(
+        Axis.horizontal,
+      ),
       firstChild: PageWidget(
         color: Colors.red,
         text: "A",
       ),
       lastChild: SplitWidget(
-        axis: Axis.vertical,
-        itemDefault: configVertical,
-        itemDragging: configVertical,
-        itemFeedback: configVertical,
+        controller: SplitWidgetController(
+          Axis.vertical,
+        ),
         firstChild: PageWidget(
           color: Colors.green,
           text: "B",

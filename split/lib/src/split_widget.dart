@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-typedef void OnWidgetSizeChange(Size size);
+typedef OnWidgetSizeChange = void Function(Size size);
 
 class MeasureSizeRenderObject extends RenderProxyBox {
   Size? oldSize;
@@ -65,17 +65,12 @@ class DragWidget extends StatelessWidget {
     double width = dragSize.width;
     double height = dragSize.height;
     return Draggable(
-      child: Container(
-        height: height,
-        width: width,
-        child: child,
-      ),
-      childWhenDragging: Container(
+      childWhenDragging: SizedBox(
         height: height,
         width: width,
         child: childWhenDragging,
       ),
-      feedback: Container(
+      feedback: SizedBox(
         height: height,
         width: width,
         child: feedback,
@@ -85,6 +80,11 @@ class DragWidget extends StatelessWidget {
         var offset = renderBox?.globalToLocal(drag.offset) ?? Offset.zero;
         onDragEnd(offset);
       },
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: child,
+      ),
     );
   }
 }
@@ -267,7 +267,6 @@ class _SplitWidgetSate extends State<SplitWidget> {
             height: widget.controller.dragSize.height,
             child: DragWidget(
               axis: widget.controller.axis,
-              child: DraggableIconWidget(),
               childWhenDragging: Container(color: Colors.black54),
               feedback: Container(color: Colors.black38),
               onDragEnd: (offset) {
@@ -277,6 +276,7 @@ class _SplitWidgetSate extends State<SplitWidget> {
                 });
               },
               dragSize: widget.controller.dragSize,
+              child: const DraggableIconWidget(),
             ),
           ),
           Positioned(
@@ -300,7 +300,7 @@ class DraggableIconWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         color: Colors.white,
-        child: Center(
+        child: const Center(
           child: Icon(
             Icons.drag_indicator,
             color: Colors.black54,
@@ -308,5 +308,3 @@ class DraggableIconWidget extends StatelessWidget {
         ),
       );
 }
-
-
